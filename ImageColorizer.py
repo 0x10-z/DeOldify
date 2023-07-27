@@ -28,7 +28,7 @@ from pathlib import Path
 
 
 def generate_comparison(original, colorized, path="compare_images/"):
-    filename = original.split("/")[-1]
+    filename = original.split(os.sep)[-1]
     original_img = Image.open(original)
     colorized_img = Image.open(colorized)
     separator = Image.new("RGB", (30, original_img.size[1]), (0, 0, 0))
@@ -49,14 +49,15 @@ def generate_comparison(original, colorized, path="compare_images/"):
     ]  # Obtiene el nombre base del archivo sin la extensión
     new_filename = f"{basename}.jpg"
 
-    comparison_img_with_border.save(f"{path}{new_filename}")
+    compared_path = f"{path}{new_filename}"
+    comparison_img_with_border.save(compared_path)
 
 
 # NOTE:  Max is 45 with 11GB video cards. 35 is a good default
 render_factor = 40
-source_path = "/mnt/d/webp"
-result_path = Path("/mnt/d/colorized/")
-compare_path = "/mnt/d/compared/"
+source_path = "D:/webp"  # "/mnt/d/webp"
+result_path = Path("D:/colorized/")  # Path("/mnt/d/colorized/")
+compare_path = "D:/compared/"  # "/mnt/d/compared/"
 
 # Download images to folder test_images/
 # 1000
@@ -68,10 +69,11 @@ for index, picture in tqdm(enumerate(files), total=len(files)):
             path=full_path,
             results_dir=result_path,
             render_factor=render_factor,
-            compare=True,
+            compare=False,
             watermarked=True,
         )
         generate_comparison(full_path, result_file, path=compare_path)
+        plt.close("all")
         torch.cuda.empty_cache()
     except Exception as e:
         print(f"Error: {e} at index {index}")
