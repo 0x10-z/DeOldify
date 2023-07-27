@@ -60,8 +60,8 @@ result_path = Path("D:/colorized/")  # Path("/mnt/d/colorized/")
 compare_path = "D:/compared/"  # "/mnt/d/compared/"
 
 # Download images to folder test_images/
-# 1000
-files = os.listdir(source_path)[:1000]
+# 400
+files = os.listdir(source_path)[400:1000]
 for index, picture in tqdm(enumerate(files), total=len(files)):
     try:
         full_path = os.path.join(source_path, picture)
