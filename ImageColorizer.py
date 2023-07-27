@@ -1,9 +1,26 @@
 # NOTE:  This must be the first call in order to work properly!
 from deoldify import device
 from deoldify.device_id import DeviceId
+import os
+
+os.environ['NUMEXPR_MAX_THREADS'] = '12'
 
 # choices:  CPU, GPU0...GPU7
 device.set(device=DeviceId.GPU0)
+
+import torch
+
+print(f"Cuda version: {torch.version.cuda}")
+
+if torch.cuda.is_available():    
+    device_count = torch.cuda.device_count()
+    print(f"Available GPUs: {device_count}")
+
+    for i in range(device_count):
+        gpu_name = torch.cuda.get_device_name(i)
+        print(f"GPU {i}: {gpu_name}")
+else:
+    print("No GPU available.")
 
 from deoldify.visualize import *
 
@@ -17,7 +34,6 @@ warnings.filterwarnings(
 
 colorizer = get_image_colorizer(artistic=True)
 
-import os
 from tqdm import tqdm
 import requests
 import matplotlib.pyplot as plt
@@ -39,7 +55,7 @@ def generate_comparison(original, colorized, path="compare_images/"):
     comparison_img = Image.fromarray(comparison)
 
     border_color = (0, 0, 0)  # RGB para negro
-    border_width = 40  # Cambia este valor para ajustar el ancho del borde
+    border_width = 45  # Cambia este valor para ajustar el ancho del borde
     comparison_img_with_border = ImageOps.expand(
         comparison_img, border=border_width, fill=border_color
     )
@@ -54,14 +70,14 @@ def generate_comparison(original, colorized, path="compare_images/"):
 
 
 # NOTE:  Max is 45 with 11GB video cards. 35 is a good default
-render_factor = 40
-source_path = "D:/webp"  # "/mnt/d/webp"
-result_path = Path("D:/colorized/")  # Path("/mnt/d/colorized/")
-compare_path = "D:/compared/"  # "/mnt/d/compared/"
+render_factor = 45
+source_path = "E:/webp"  # "/mnt/d/webp"
+result_path = Path("E:/colorized/")  # Path("/mnt/d/colorized/")
+compare_path = "E:/compared/"  # "/mnt/d/compared/"
 
 # Download images to folder test_images/
-# 400
-files = os.listdir(source_path)[400:1000]
+# 5000
+files = os.listdir(source_path)[5000:10000]
 for index, picture in tqdm(enumerate(files), total=len(files)):
     try:
         full_path = os.path.join(source_path, picture)
