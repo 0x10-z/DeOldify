@@ -3,7 +3,14 @@ from deoldify import device
 from deoldify.device_id import DeviceId
 import os
 
-os.environ['NUMEXPR_MAX_THREADS'] = '12'
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+from PIL import Image
+import numpy as np
+from PIL import ImageOps
+from pathlib import Path
+
+os.environ["NUMEXPR_MAX_THREADS"] = "12"
 
 # choices:  CPU, GPU0...GPU7
 device.set(device=DeviceId.GPU0)
@@ -12,7 +19,7 @@ import torch
 
 print(f"Cuda version: {torch.version.cuda}")
 
-if torch.cuda.is_available():    
+if torch.cuda.is_available():
     device_count = torch.cuda.device_count()
     print(f"Available GPUs: {device_count}")
 
@@ -33,14 +40,6 @@ warnings.filterwarnings(
 )
 
 colorizer = get_image_colorizer(artistic=True)
-
-from tqdm import tqdm
-import requests
-import matplotlib.pyplot as plt
-from PIL import Image
-import numpy as np
-from PIL import ImageOps
-from pathlib import Path
 
 
 def generate_comparison(original, colorized, path="compare_images/"):
@@ -71,13 +70,14 @@ def generate_comparison(original, colorized, path="compare_images/"):
 
 # NOTE:  Max is 45 with 11GB video cards. 35 is a good default
 render_factor = 45
-source_path = "E:/webp"  # "/mnt/d/webp"
-result_path = Path("E:/colorized/")  # Path("/mnt/d/colorized/")
-compare_path = "E:/compared/"  # "/mnt/d/compared/"
+source_path = "D:/webp"  # "/mnt/d/webp"
+result_path = Path("D:/colorized/")  # Path("/mnt/d/colorized/")
+compare_path = "D:/compared/"  # "/mnt/d/compared/"
 
 # Download images to folder test_images/
-# 5000
-files = os.listdir(source_path)[5000:10000]
+FROM = 5600 + 2800
+TO = 20000
+files = os.listdir(source_path)[FROM:TO]
 for index, picture in tqdm(enumerate(files), total=len(files)):
     try:
         full_path = os.path.join(source_path, picture)
