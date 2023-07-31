@@ -75,8 +75,11 @@ result_path = Path("D:/colorized/")  # Path("/mnt/d/colorized/")
 compare_path = "D:/compared/"  # "/mnt/d/compared/"
 
 # Download images to folder test_images/
-FROM = 5600 + 2800
-TO = 20000
+# EN kurago se han hecho como mucho hasta el 20000
+# del 20000 hasta el 40000 en casa
+# Del 40000 al 70000 en casa
+FROM = 40000
+TO = 70000
 files = os.listdir(source_path)[FROM:TO]
 for index, picture in tqdm(enumerate(files), total=len(files)):
     try:
